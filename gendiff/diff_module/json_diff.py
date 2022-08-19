@@ -1,76 +1,67 @@
 import json
-from collections import OrderedDict
-
-JSON_DIFF_DICT = OrderedDict()
 
 
-def generate_diff(json_file1, json_file2):
+def generate_diff(first_json_file, second_json_file):
     """
     Create a dictionary of differences between JSON files.
 
     Args:
-        json_file1: first JSON file,
-        json_file2: second JSON file.
+        first_json_file: first JSON file,
+        second_json_file: second JSON file.
 
     Returns:
         dictionary of differences with comments.
     """
-    json_dict1, json_dict2 = convert_json_to_dict(json_file1, json_file2)
-    for key in sorted(set(json_dict1) | (set(json_dict2))):
-        key_diff_status = check_key_statement(key, json_dict1, json_dict2)
-        if key_diff_status == 'first':
-            JSON_DIFF_DICT.update({
-                ('- {0}').format(key): json_dict1.get(key),
-            })
-            continue
-        if key_diff_status == 'second':
-            JSON_DIFF_DICT.update({
-                ('+ {0}').format(key): json_dict2.get(key),
-            })
-            continue
-        if json_dict1.get(key) == json_dict2.get(key):
-            JSON_DIFF_DICT.update({
-                ('  {0}').format(key): json_dict1.get(key),
-            })
-        else:
-            JSON_DIFF_DICT.update({
-                ('- {0}').format(key): json_dict1.get(key),
-                ('+ {0}').format(key): json_dict2.get(key),
-            })
-    return json.dumps(JSON_DIFF_DICT, indent=2)
+    first_dict, second_dict = convert_json_to_dict(
+        first_json_file, second_json_file,
+    )
+    dict_of_difference = build_diff_dictionary(first_dict, second_dict)
+    output = json.dumps(dict_of_difference, indent=2, separators=('', ': '))
+    return output.replace('"', '')
 
 
-def check_key_statement(key, dict1, dict2):
+def build_diff_dictionary(first_dict, second_dict):
     """
-    Check statement of key in JSON dict.
+    Create a dictionary of differences between JSON files.
 
     Args:
-        key: key of dict to check,
-        dict1: first JSON dict,
-        dict2: second JSON dict.
+        first_dict: first dict,
+        second_dict: second dict.
 
     Returns:
-        state of key in dict.
+        dictionary of differences.
     """
-    if key in dict1 and key not in dict2:
-        return 'first'
-    if key not in dict1 and key in dict2:
-        return 'second'
+    diff_dict = {}
+    first_file_keys = set(first_dict)
+    second_file_keys = set(second_dict)
+    for key in sorted(first_file_keys | second_file_keys):
+        if key in first_file_keys - second_file_keys:
+            diff_dict.update({('- {0}').format(key): first_dict.get(key)})
+        elif key in second_file_keys - first_file_keys:
+            diff_dict.update({('+ {0}').format(key): second_dict.get(key)})
+        elif first_dict.get(key) == second_dict.get(key):
+            diff_dict.update({('  {0}').format(key): first_dict.get(key)})
+        else:
+            diff_dict.update({
+                ('- {0}').format(key): first_dict.get(key),
+                ('+ {0}').format(key): second_dict.get(key),
+            })
+    return diff_dict
 
 
-def convert_json_to_dict(json_file1, json_file2):
+def convert_json_to_dict(first_json_file, second_json_file):
     """
     Format JSON file to python dict.
 
     Args:
-        json_file1: first file,
-        json_file2: second file.
+        first_json_file: first file,
+        second_json_file: second file.
 
     Returns:
         Tuples of converted object.
     """
-    with open(json_file1) as file1:
-        json_dict1 = json.load(file1)
-    with open(json_file2) as file2:
-        json_dict2 = json.load(file2)
-    return json_dict1, json_dict2
+    with open(first_json_file) as first_file:
+        first_dict = json.load(first_file)
+    with open(second_json_file) as second_file:
+        second_dict = json.load(second_file)
+    return first_dict, second_dict
