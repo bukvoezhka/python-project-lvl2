@@ -11,6 +11,9 @@ lint:
 tests:
 	poetry run pytest
 
+cov-tests:
+	poetry run coverage report -m
+
 publish:
 	poetry publish --dry-run
 

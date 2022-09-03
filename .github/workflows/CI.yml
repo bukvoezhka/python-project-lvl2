@@ -21,3 +21,10 @@ jobs:
           poetry run flake8 gendiff
           poetry run flake8 tests
           poetry run pytest
+      - name: Code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
+        env:
+          TEST_REPORTER_ID: ${{ secrets.TEST_REPORTER_ID }}
+          with:
+            coverageCommand: poetry run coverage report -m
+            debug: true
