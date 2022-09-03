@@ -12,13 +12,13 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-      - name: Install Poetry Action
-        uses: snok/install-poetry@v1.3.1
       - name: Load cached $HOME/.local
         uses: actions/cache@v3.0.8
         with:
           path: ~/.local
           key: dotlocal-${{ runner.os }}-${{ hashFiles('.github/workflows/CI.yml') }}
+      - name: Install Poetry Action
+        uses: snok/install-poetry@v1.3.1
       - name: Install Dependencies
         run: poetry install
       - name: Project Check
@@ -31,5 +31,4 @@ jobs:
         env:
           TEST_REPORTER_ID: ${{ secrets.TEST_REPORTER_ID }}
         with:
-          coverageCommand: poetry run coverage report -m
-          debug: true
+          coverageCommand: poetry run coverage xml
