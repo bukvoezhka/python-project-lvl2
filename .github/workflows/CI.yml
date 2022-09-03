@@ -25,6 +25,6 @@ jobs:
         uses: paambaati/codeclimate-action@v3.0.0
         env:
           TEST_REPORTER_ID: ${{ secrets.TEST_REPORTER_ID }}
-          with:
-            coverageCommand: poetry run coverage report -m
-            debug: true
+        with:
+          coverageCommand: poetry run coverage report -m
+          debug: true
