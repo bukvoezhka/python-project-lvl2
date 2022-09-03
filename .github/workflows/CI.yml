@@ -1,0 +1,23 @@
+name: Run lint&tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: Install library
+        run: poetry install
+      - name: Project Check
+        run: |
+          poetry run flake8 gendiff
+          poetry run flake8 tests
+          poetry run pytest
