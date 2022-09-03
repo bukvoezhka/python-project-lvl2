@@ -11,8 +11,8 @@ lint:
 tests:
 	poetry run pytest
 
-cov-tests:
-	poetry run coverage report -m
+cov-test:
+	poetry run pytest --cov=gendiff
 
 publish:
 	poetry publish --dry-run
