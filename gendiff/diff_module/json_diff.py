@@ -15,12 +15,14 @@ def generate_diff(first_json_file, second_json_file):
     first_dict, second_dict = convert_json_to_dict(
         first_json_file, second_json_file,
     )
-    dict_of_difference = build_diff_dictionary(first_dict, second_dict)
-    output = json.dumps(dict_of_difference, indent=2, separators=('', ': '))
-    return output.replace('"', '')
+    dict_of_difference = main(first_dict, second_dict)
+    pretty_print_dict = json.dumps(
+        dict_of_difference, indent=2, separators=('', ': '),
+    )
+    return pretty_print_dict.replace('"', '')
 
 
-def build_diff_dictionary(first_dict, second_dict):
+def main(first_dict, second_dict):
     """
     Create a dictionary of differences between JSON files.
 
