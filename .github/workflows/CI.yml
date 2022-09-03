@@ -18,5 +18,6 @@ jobs:
         run: poetry install
       - name: Project Check
         run: |
-          make lint
-          make test
+          poetry run flake8 gendiff
+          poetry run flake8 tests
+          poetry run pytest
