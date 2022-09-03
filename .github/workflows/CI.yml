@@ -16,6 +16,6 @@ jobs:
           python -m pip install --upgrade pip
       - name: Project Check
         run: |
-          run flake8 gendiff
-          run flake8 tests
-          run pytest
+          flake8 gendiff
+          flake8 tests
+          pytest
