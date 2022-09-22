@@ -2,7 +2,7 @@
 """Gendiff module description."""
 import argparse
 
-from gendiff.diff_module.json_diff import generate_diff
+from gendiff.diff_module.generate_diff import generate_diff
 
 
 def main():
