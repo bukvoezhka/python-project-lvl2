@@ -4,8 +4,11 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/8fc160ac193cabb5e193/maintainability)](https://codeclimate.com/github/bukvoezhka/python-project-lvl2/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/8fc160ac193cabb5e193/test_coverage)](https://codeclimate.com/github/bukvoezhka/python-project-lvl2/test_coverage)
 
-### Flat JSON diff
-[![asciicast](https://asciinema.org/a/X8vuIAaxq1rrQAiJ25UJqeDUv.svg)](https://asciinema.org/a/X8vuIAaxq1rrQAiJ25UJqeDUv)
+### Main menu
+[![asciicast](https://asciinema.org/a/FXf4O2kpKkUyZYW0DmysmqJnL.svg)](https://asciinema.org/a/FXf4O2kpKkUyZYW0DmysmqJnL)
 
-### Flat YAML diff
-[![asciicast](https://asciinema.org/a/FsPXSuHau0sN6MVXXh9kreUZY.svg)](https://asciinema.org/a/FsPXSuHau0sN6MVXXh9kreUZY)
+### Flat diff
+[![asciicast](https://asciinema.org/a/RiIyjyyqF20eucPPDkRuY78vQ.svg)](https://asciinema.org/a/RiIyjyyqF20eucPPDkRuY78vQ)
+
+### Nested diff
+[![asciicast](https://asciinema.org/a/iwskemUhDEQIzXNzsuzaU6vYd.svg)](https://asciinema.org/a/iwskemUhDEQIzXNzsuzaU6vYd)
