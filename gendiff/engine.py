@@ -22,6 +22,7 @@ AST_KEY_STATUS = {
 }
 
 
+# TODO: divide 'with' function.
 def prepare_files(first_file, second_file):
     """
     Prepare input files for parsing.
@@ -161,19 +162,20 @@ def make_ast_diff(first_dict, second_dict):
     return diff
 
 
-def generate_diff(first_file, second_file):
+def generate_diff(first_file, second_file, formatter=pretty_print_ast):
     """
     Create a view of differences between data interchage files.
 
     Args:
         first_file: first data file,
-        second_file: second data file.
+        second_file: second data file,
+        formatter: default formatter for output view.
 
     Returns:
         view of differences with comments.
     """
     try:
-        return pretty_print_ast(make_ast_diff(*prepare_files(
+        return formatter(make_ast_diff(*prepare_files(
             first_file, second_file,
         )))
     except ValueError:

@@ -6,21 +6,50 @@ VISUAL_INDENT = {
         'old': '- ',
         'new': '+ ',
     },
+    'tab': ' ',
 }
 SPACE_INDENT = 2
 
 
 def add_space_indent(current_indent):
+    """
+    Add space for indent print.
+
+    Args:
+        current_indent: current amount of indent.
+
+    Returns:
+        string for tab.
+    """
     current_indent += SPACE_INDENT
-    return ' ' * current_indent
+    return VISUAL_INDENT['tab'] * current_indent
 
 
 def del_space_indent(current_indent):
+    """
+    Delete space for indent print.
+
+    Args:
+        current_indent: current amount of indent.
+
+    Returns:
+        string for tab.
+    """
     current_indent -= SPACE_INDENT
-    return ' ' * current_indent
+    return VISUAL_INDENT['tab'] * current_indent
 
 
 def stringify_primitive(ast_value, indent):
+    """
+    Check and convert boolean value for print view or start recursion for dict.
+
+    Args:
+        ast_value: value from ast,
+        indent: current amount of indent.
+
+    Returns:
+        primitive output string or recursion for nested dict.
+    """
     if ast_value is True:
         return 'true'
     if ast_value is False:
@@ -33,6 +62,16 @@ def stringify_primitive(ast_value, indent):
 
 
 def pretty_print_dict_value(ast_dict_value, indent):
+    """
+    Add print view for nested dict in AST.
+
+    Args:
+        ast_dict_value: dict object,
+        indent: current space indent for print view.
+
+    Returns:
+        string view for output.
+    """
     pp_dict_value = []
     space_indent = add_space_indent(indent)
     current_indent = len(space_indent)
@@ -53,6 +92,16 @@ def pretty_print_dict_value(ast_dict_value, indent):
 
 
 def pretty_print_ast(ast, indent=0):
+    """
+    Convert AST to pretty print view.
+
+    Args:
+        ast: abstract syntax tree,
+        indent: amount of indent for output view.
+
+    Returns:
+        string representation.
+    """
     pp_ast = []
     space_indent = add_space_indent(indent)
     current_indent = len(space_indent)
