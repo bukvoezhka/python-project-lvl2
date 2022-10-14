@@ -9,7 +9,7 @@ lint:
 	poetry run flake8 tests
 
 tests:
-	poetry run pytest -v
+	poetry run pytest -vv
 
 cov-test:
 	poetry run pytest --cov=gendiff
