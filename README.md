@@ -12,3 +12,6 @@
 
 ### Nested diff
 [![asciicast](https://asciinema.org/a/iwskemUhDEQIzXNzsuzaU6vYd.svg)](https://asciinema.org/a/iwskemUhDEQIzXNzsuzaU6vYd)
+
+### Plain formatter
+[![asciicast](https://asciinema.org/a/ifcajaR2pb8I4bV6yKZFLBKWK.svg)](https://asciinema.org/a/ifcajaR2pb8I4bV6yKZFLBKWK)
