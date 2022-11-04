@@ -1,80 +1,64 @@
 NESTED_AST = [
     {
         'key': 'common',
-        'value': None,
-        'status': 'upd',
-        'children': [
+        'status': 'children',
+        'value': [
             {
                 'key': 'follow',
+                'status': 'added',
                 'value': False,
-                'status': 'add',
-                'children': None,
             },
             {
                 'key': 'setting1',
+                'status': 'equal',
                 'value': 'Value 1',
-                'status': 'eql',
-                'children': None,
             },
             {
                 'key': 'setting2',
+                'status': 'deleted',
                 'value': 200,
-                'status': 'del',
-                'children': None,
             },
             {
                 'key': 'setting3',
-                'value': {
-                    'old': True,
-                    'new': None,
-                },
-                'status': 'upd',
-                'children': None,
+                'status': 'updated',
+                'old_value': True,
+                'new_value': None,
             },
             {
                 'key': 'setting4',
+                'status': 'added',
                 'value': 'blah blah',
-                'status': 'add',
-                'children': None,
             },
             {
                 'key': 'setting5',
+                'status': 'added',
                 'value': {'key5': 'value5'},
-                'status': 'add',
-                'children': None,
             },
             {
                 'key': 'setting6',
-                'value': None,
-                'status': 'upd',
-                'children': [
+                'status': 'children',
+                'value': [
                     {
                         'key': 'doge',
-                        'value': None,
-                        'status': 'upd',
-                        'children': [
+                        'status': 'children',
+                        'value': [
                             {
                                 'key': 'wow',
-                                'value': {
-                                    'old': '',
-                                    'new': 'so much',
-                                },
-                                'status': 'upd',
-                                'children': None,
+                                'status': 'updated',
+                                'old_value': '',
+                                'new_value': 'so much',
                             },
                         ],
                     },
                     {
                         'key': 'key',
+                        'status': 'equal',
                         'value': 'value',
-                        'status': 'eql',
-                        'children': None,
                     },
                     {
                         'key': 'ops',
+                        'status': 'added',
                         'value': 'vops',
-                        'status': 'add',
-                        'children': None,
                     },
                 ],
             },
@@ -82,48 +66,40 @@ NESTED_AST = [
     },
     {
         'key': 'group1',
-        'value': None,
-        'status': 'upd',
-        'children': [
+        'status': 'children',
+        'value': [
             {
                 'key': 'baz',
-                'value': {
-                    'old': 'bas',
-                    'new': 'bars',
-                },
-                'status': 'upd',
-                'children': None,
+                'status': 'updated',
+                'old_value': 'bas',
+                'new_value': 'bars',
             },
             {
                 'key': 'foo',
+                'status': 'equal',
                 'value': 'bar',
-                'status': 'eql',
-                'children': None,
             },
             {
                 'key': 'nest',
-                'value': {
-                    'old': {'key': 'value'},
-                    'new': 'str',
-                },
-                'status': 'upd',
-                'children': None,
+                'status': 'updated',
+                'old_value': {'key': 'value'},
+                'new_value': 'str',
             },
         ],
     },
     {
         'key': 'group2',
+        'status': 'deleted',
         'value': {
             'abc': 12345,
             'deep': {
                 'id': 45,
             },
         },
-        'status': 'del',
-        'children': None,
     },
     {
         'key': 'group3',
+        'status': 'added',
         'value': {
             'deep': {
                 'id': {
@@ -132,7 +108,5 @@ NESTED_AST = [
             },
             'fee': 100500,
         },
-        'status': 'add',
-        'children': None,
     },
 ]

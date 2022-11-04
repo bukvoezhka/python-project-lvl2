@@ -1,35 +1,28 @@
 FLAT_AST = [
     {
         'key': 'follow',
+        'status': 'deleted',
         'value': False,
-        'status': 'del',
-        'children': None,
     },
     {
         'key': 'host',
+        'status': 'equal',
         'value': 'hexlet.io',
-        'status': 'eql',
-        'children': None,
     },
     {
         'key': 'proxy',
+        'status': 'deleted',
         'value': '123.234.53.22',
-        'status': 'del',
-        'children': None,
     },
     {
         'key': 'timeout',
-        'value': {
-            'old': 50,
-            'new': 20,
-        },
-        'status': 'upd',
-        'children': None,
+        'status': 'updated',
+        'old_value': 50,
+        'new_value': 20,
     },
     {
         'key': 'verbose',
+        'status': 'added',
         'value': True,
-        'status': 'add',
-        'children': None,
     },
 ]
