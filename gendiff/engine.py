@@ -1,28 +1,28 @@
-import json
 from pathlib import Path
 
-import yaml
-from gendiff.stylish import pretty_print_ast
-
-FIlE_HANDLER = {
-    'JSON': {
-        'extns': ('.json'),
-        'converter': json.load,
-    },
-    'YAML': {
-        'extns': ('.yaml', '.yml'),
-        'converter': yaml.safe_load,
-    },
-}
-AST_KEY_STATUS = {
-    'added': 'add',
-    'deleted': 'del',
-    'equal': 'eql',
-    'updated': 'upd',
-}
+from gendiff.constants import AST_STRUCTURE, STATUS, FIlE_HANDLER
+from gendiff.formatters.stylish import make_ast_tree_view as stylish
 
 
-# TODO: divide 'with' function.
+def convert_files(first_file, second_file, converter):
+    """
+    Convert input files to python dict.
+
+    Args:
+        first_file: first data file,
+        second_file: second data file,
+        converter: nessesary to convert function.
+
+    Returns:
+        Tuple of python dicts.
+    """
+    with open(first_file) as first:
+        first_dict = converter(first)
+    with open(second_file) as second:
+        second_dict = converter(second)
+    return first_dict, second_dict
+
+
 def prepare_files(first_file, second_file):
     """
     Prepare input files for parsing.
@@ -32,7 +32,7 @@ def prepare_files(first_file, second_file):
         second_file: second data file.
 
     Returns:
-        Dict of context for parsing.
+        Python dicts for parsing.
 
     Raises:
         ValueError: if files extension does not match.
@@ -40,11 +40,9 @@ def prepare_files(first_file, second_file):
     for _, context in FIlE_HANDLER.items():
         if (Path(first_file).suffix in context['extns']):
             if (Path(second_file).suffix in context['extns']):
-                with open(first_file) as first:
-                    first_dict = context['converter'](first)
-                with open(second_file) as second:
-                    second_dict = context['converter'](second)
-                return first_dict, second_dict
+                return convert_files(
+                    first_file, second_file, context['converter'],
+                )
     raise ValueError
 
 
@@ -65,68 +63,60 @@ def is_values_dict(first_value, second_value):
     return False
 
 
-def get_key_status(key, first, second):
+def check_value_status(key, node_values):
     """
-    Check status of key in to sets.
+    Check status of values.
 
     Args:
-        key: key from set,
-        first: first set,
-        second: second set.
+        key: current key from loop,
+        node_values: values from two dict node.
 
     Returns:
-        tuple with key ans staus.
+        tuple with key, status and values for node.
     """
-    if key in first - second:
-        return key, AST_KEY_STATUS['deleted']
-    if key in second - first:
-        return key, AST_KEY_STATUS['added']
-    return key, None
+    first_value, second_value = node_values
+    if first_value == second_value:
+        return key, STATUS.equal, node_values
+    if is_values_dict(first_value, second_value):
+        return key, STATUS.children, node_values
+    return key, STATUS.updated, node_values
 
 
-def make_ast_diff_node(key_info, first_value, second_value):
+def check_key_status(key, keys_sets, node_values):
+    """
+    Check status of keys.
+
+    Args:
+        key: current key from loop,
+        keys_sets: keys from two dicts,
+        node_values: values from two dict node.
+
+    Returns:
+        tuple with key, status and values for node.
+    """
+    first_keys, second_keys = keys_sets
+    if key in first_keys - second_keys:
+        return key, STATUS.deleted, node_values
+    if key in second_keys - first_keys:
+        return key, STATUS.added, node_values
+    return check_value_status(key, node_values)
+
+
+def make_ast_diff_node(key, key_status, node_values):
     """
     Make node for AST tree.
 
     Args:
-        key_info: key with his diff status,
-        first_value: first dict value,
-        second_value: second dict value.
+        key: current key from loop,
+        key_status: status of key for AST,
+        node_values: tuple with value from dicts.
 
     Returns:
         dict node.
     """
-    current_key, key_status = key_info
-    if key_status == AST_KEY_STATUS['deleted']:
-        return {
-            'key': current_key,
-            'value': first_value,
-            'status': AST_KEY_STATUS['deleted'],
-            'children': None,
-        }
-    if key_status == AST_KEY_STATUS['added']:
-        return {
-            'key': current_key,
-            'value': second_value,
-            'status': AST_KEY_STATUS['added'],
-            'children': None,
-        }
-    if first_value == second_value:
-        return {
-            'key': current_key,
-            'value': first_value,
-            'status': AST_KEY_STATUS['equal'],
-            'children': None,
-        }
-    return {
-        'key': current_key,
-        'value': {
-            'old': first_value,
-            'new': second_value,
-        },
-        'status': AST_KEY_STATUS['updated'],
-        'children': None,
-    }
+    if key_status == STATUS.children:
+        return AST_STRUCTURE[key_status](key, make_ast_diff(*node_values))
+    return AST_STRUCTURE[key_status](key, node_values)
 
 
 def make_ast_diff(first_dict, second_dict):
@@ -144,25 +134,16 @@ def make_ast_diff(first_dict, second_dict):
     first_keys = set(first_dict)
     second_keys = set(second_dict)
     for key in sorted(first_keys | second_keys):
-        first_value = first_dict.get(key)
-        second_value = second_dict.get(key)
-        if is_values_dict(first_value, second_value):
-            diff.append({
-                'key': key,
-                'value': None,
-                'status': AST_KEY_STATUS['updated'],
-                'children': make_ast_diff(first_value, second_value),
-            })
-        else:
-            diff.append(make_ast_diff_node(
-                get_key_status(key, first_keys, second_keys),
-                first_value,
-                second_value,
+        diff.append(
+            make_ast_diff_node(*check_key_status(
+                key, (first_keys, second_keys),
+                (first_dict.get(key), second_dict.get(key)),
+            ),
             ))
     return diff
 
 
-def generate_diff(first_file, second_file, formatter=pretty_print_ast):
+def generate_diff(first_file, second_file, formatter=stylish):
     """
     Create a view of differences between data interchage files.
 
@@ -179,4 +160,4 @@ def generate_diff(first_file, second_file, formatter=pretty_print_ast):
             first_file, second_file,
         )))
     except ValueError:
-        return 'Error! Files extension does not match!'
+        return ValueError('File extension does not match or is not supported.')
