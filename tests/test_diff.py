@@ -32,34 +32,6 @@ NESTED_PLAIN_FORMAT = Path(
 ).read_text().replace(r'\n', '\n')
 
 
-def test_generate_flat_diff():
-    """Testing flat diff module."""
-    assert generate_diff(
-        FIRST_FLAT_YAML, SECOND_FLAT_YAML,
-    ) == COMPARE_FLAT_FILES
-    assert generate_diff(
-        FIRST_FLAT_JSON, SECOND_FLAT_JSON,
-    ) == COMPARE_FLAT_FILES
-
-
-def test_generate_nested_diff():
-    """Testing nested diff module."""
-    assert generate_diff(
-        FIRST_NESTED_YAML, SECOND_NESTED_YAML,
-    ) == COMPARE_NESTED_FILES
-    assert generate_diff(
-        FIRST_NESTED_JSON, SECOND_NESTED_JSON,
-    ) == COMPARE_NESTED_FILES
-
-
-def test_match_files_extension():
-    """Testing extension files match."""
-    assert isinstance(
-        generate_diff(FIRST_FLAT_JSON, FIRST_FLAT_YAML),
-        ValueError,
-    )
-
-
 def test_make_flat_ast():
     """Testing generate flat AST."""
     assert make_ast_diff(*prepare_files(
@@ -80,33 +52,63 @@ def test_make_nested_ast():
     )) == NESTED_AST
 
 
-def test_pretty_print_ast_tree():
-    """Testing stylish formatter of AST."""
+def test_generate_flat_diff():
+    """Testing flat diff module."""
+    assert generate_diff(
+        FIRST_FLAT_YAML, SECOND_FLAT_YAML,
+    ) == COMPARE_FLAT_FILES
+    assert generate_diff(
+        FIRST_FLAT_JSON, SECOND_FLAT_JSON,
+    ) == COMPARE_FLAT_FILES
+
+
+def test_generate_nested_diff():
+    """Testing nested diff module."""
+    assert generate_diff(
+        FIRST_NESTED_YAML, SECOND_NESTED_YAML,
+    ) == COMPARE_NESTED_FILES
+    assert generate_diff(
+        FIRST_NESTED_JSON, SECOND_NESTED_JSON,
+    ) == COMPARE_NESTED_FILES
+
+
+def test_error_exceptions():
+    """Testing extension files match."""
+    assert isinstance(
+        generate_diff(FIRST_FLAT_JSON, FIRST_FLAT_YAML),
+        TypeError,
+    )
+    assert isinstance(
+        generate_diff(FIRST_FLAT_JSON, FIRST_FLAT_YAML, 'random'),
+        KeyError,
+    )
+
+
+def test_stylish_formatter():
+    """Testing stylish formatter for AST."""
     assert stylish(FLAT_AST) == COMPARE_FLAT_FILES
     assert stylish(NESTED_AST) == COMPARE_NESTED_FILES
     assert generate_diff(
         FIRST_FLAT_JSON,
         SECOND_FLAT_JSON,
-        formatter=stylish,
     ) == COMPARE_FLAT_FILES
     assert generate_diff(
         FIRST_NESTED_YAML,
         SECOND_NESTED_YAML,
-        formatter=stylish,
     ) == COMPARE_NESTED_FILES
 
 
-def test_pretty_print_ast_plain():
-    """Testing plain formatter of AST."""
+def test_plain_formatter():
+    """Testing plain formatter for AST."""
     assert plain(FLAT_AST) == FLAT_PLAIN_FORMAT
     assert plain(NESTED_AST) == NESTED_PLAIN_FORMAT
     assert generate_diff(
         FIRST_FLAT_YAML,
         SECOND_FLAT_YAML,
-        formatter=plain,
+        formatter='plain',
     ) == FLAT_PLAIN_FORMAT
     assert generate_diff(
         FIRST_NESTED_YAML,
         SECOND_NESTED_YAML,
-        formatter=plain,
+        formatter='plain',
     ) == NESTED_PLAIN_FORMAT
