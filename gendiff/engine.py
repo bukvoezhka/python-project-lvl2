@@ -1,7 +1,16 @@
+from functools import partial
+from json import dumps as make_ast_json_view
 from pathlib import Path
 
-from gendiff.constants import AST_STRUCTURE, STATUS, FIlE_HANDLER
-from gendiff.formatters.stylish import make_ast_tree_view as stylish
+from gendiff.constants import AST_STRUCTURE, SPACE_INDENT, STATUS, FIlE_HANDLER
+from gendiff.formatters.plain import make_ast_plain_view
+from gendiff.formatters.stylish import make_ast_tree_view
+
+FORMATTERS = {
+    'json': partial(make_ast_json_view, indent=SPACE_INDENT),
+    'plain': make_ast_plain_view,
+    'stylish': make_ast_tree_view,
+}
 
 
 def convert_files(first_file, second_file, converter):
@@ -33,9 +42,6 @@ def prepare_files(first_file, second_file):
 
     Returns:
         Python dicts for parsing.
-
-    Raises:
-        ValueError: if files extension does not match.
     """
     for _, context in FIlE_HANDLER.items():
         if (Path(first_file).suffix in context['extns']):
@@ -43,7 +49,6 @@ def prepare_files(first_file, second_file):
                 return convert_files(
                     first_file, second_file, context['converter'],
                 )
-    raise ValueError
 
 
 def is_values_dict(first_value, second_value):
@@ -143,21 +148,23 @@ def make_ast_diff(first_dict, second_dict):
     return diff
 
 
-def generate_diff(first_file, second_file, formatter=stylish):
+def generate_diff(first_file, second_file, formatter='stylish'):
     """
     Create a view of differences between data interchage files.
 
     Args:
         first_file: first data file,
         second_file: second data file,
-        formatter: default formatter for output view.
+        formatter: formatter for customize output view.
 
     Returns:
         view of differences with comments.
     """
     try:
-        return formatter(make_ast_diff(*prepare_files(
+        return FORMATTERS[formatter](make_ast_diff(*prepare_files(
             first_file, second_file,
         )))
-    except ValueError:
-        return ValueError('File extension does not match or is not supported.')
+    except KeyError:
+        return KeyError('Specified format is invalid.')
+    except TypeError:
+        return TypeError('Files extension does not match or is not supported.')
