@@ -15,3 +15,6 @@
 
 ### Plain formatter
 [![asciicast](https://asciinema.org/a/ifcajaR2pb8I4bV6yKZFLBKWK.svg)](https://asciinema.org/a/ifcajaR2pb8I4bV6yKZFLBKWK)
+
+### JSON formatter
+[![asciicast](https://asciinema.org/a/YEtnVkzytWpPh5BVaRp0eugrW.svg)](https://asciinema.org/a/YEtnVkzytWpPh5BVaRp0eugrW)
