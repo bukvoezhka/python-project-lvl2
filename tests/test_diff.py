@@ -18,6 +18,8 @@ SECOND_FLAT_YAML = Path(FIXTURES_REPO, 'flat_file2.yml')
 FIRST_NESTED_YAML = Path(FIXTURES_REPO, 'nested_file1.yml')
 SECOND_NESTED_YAML = Path(FIXTURES_REPO, 'nested_file2.yml')
 
+WRONG_FILE = Path(FIXTURES_REPO, 'wrong_extn_file.yamla')
+
 COMPARE_FLAT_FILES = Path(
     FIXTURES_REPO, 'compare_flat_files.txt',
 ).read_text().replace(r'\n', '\n')
@@ -73,9 +75,9 @@ def test_generate_nested_diff():
 
 
 def test_error_exceptions():
-    """Testing extension files match."""
+    """Testing some of usual exceptions."""
     assert isinstance(
-        generate_diff(FIRST_FLAT_JSON, FIRST_FLAT_YAML),
+        generate_diff(FIRST_FLAT_JSON, WRONG_FILE),
         TypeError,
     )
     assert isinstance(
@@ -112,3 +114,6 @@ def test_plain_formatter():
         SECOND_NESTED_YAML,
         formatter='plain',
     ) == NESTED_PLAIN_FORMAT
+
+
+print(generate_diff(FIRST_FLAT_YAML, SECOND_FLAT_JSON))
