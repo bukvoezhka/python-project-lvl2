@@ -5,7 +5,7 @@ import yaml
 
 NEW_LINE = '\n'
 
-FIlE_HANDLER = {
+FILE_HANDLER = {
     'JSON': {
         'extns': ('.json'),
         'converter': json.load,
