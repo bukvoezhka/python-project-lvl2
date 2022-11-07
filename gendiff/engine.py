@@ -2,7 +2,7 @@ from functools import partial
 from json import dumps as make_ast_json_view
 from pathlib import Path
 
-from gendiff.constants import AST_STRUCTURE, SPACE_INDENT, STATUS, FIlE_HANDLER
+from gendiff.constants import AST_STRUCTURE, FILE_HANDLER, SPACE_INDENT, STATUS
 from gendiff.formatters.plain import make_ast_plain_view
 from gendiff.formatters.stylish import make_ast_tree_view
 
@@ -13,23 +13,20 @@ FORMATTERS = {
 }
 
 
-def convert_files(first_file, second_file, converter):
+def convert_files(file, converter):
     """
     Convert input files to python dict.
 
     Args:
-        first_file: first data file,
-        second_file: second data file,
+        file: data file,
         converter: nessesary to convert function.
 
     Returns:
         Tuple of python dicts.
     """
-    with open(first_file) as first:
-        first_dict = converter(first)
-    with open(second_file) as second:
-        second_dict = converter(second)
-    return first_dict, second_dict
+    with open(file) as convert_file:
+        python_dict = converter(convert_file)
+    return python_dict
 
 
 def prepare_files(first_file, second_file):
@@ -43,12 +40,17 @@ def prepare_files(first_file, second_file):
     Returns:
         Python dicts for parsing.
     """
-    for _, context in FIlE_HANDLER.items():
-        if (Path(first_file).suffix in context['extns']):
-            if (Path(second_file).suffix in context['extns']):
-                return convert_files(
-                    first_file, second_file, context['converter'],
-                )
+    converted = []
+    files = {
+        first_file: Path(first_file).suffix,
+        second_file: Path(second_file).suffix,
+    }
+    for file, extn in files.items():
+        for _, context in FILE_HANDLER.items():
+            if (extn in context['extns']):
+                converted.append(convert_files(file, context['converter']))
+                break
+    return converted
 
 
 def is_values_dict(first_value, second_value):
@@ -167,4 +169,4 @@ def generate_diff(first_file, second_file, formatter='stylish'):
     except KeyError:
         return KeyError('Specified format is invalid.')
     except TypeError:
-        return TypeError('Files extension does not match or is not supported.')
+        return TypeError('Files extension is not supported.')
