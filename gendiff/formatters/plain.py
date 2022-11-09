@@ -21,10 +21,11 @@ def stringify_primitive(current_value):
         return '[complex value]'
     if isinstance(current_value, str):
         return "'{0}'".format(current_value)
-    try:
+    if isinstance(current_value, bool):
         return PRIMITIVE_VALUES[current_value]
-    except KeyError:
-        return current_value
+    if current_value is None:
+        return PRIMITIVE_VALUES[current_value]
+    return current_value
 
 
 def check_cell_status(cell):

@@ -48,10 +48,11 @@ def stringify_primitive(current_value):
     """
     if isinstance(current_value, dict):
         return convert_dict_value(current_value)
-    try:
+    if isinstance(current_value, bool):
         return PRIMITIVE_VALUES[current_value]
-    except KeyError:
-        return current_value
+    if current_value is None:
+        return PRIMITIVE_VALUES[current_value]
+    return current_value
 
 
 def is_false_children(node_value):
