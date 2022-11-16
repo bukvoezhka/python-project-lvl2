@@ -114,6 +114,3 @@ def test_plain_formatter():
         SECOND_NESTED_YAML,
         formatter='plain',
     ) == NESTED_PLAIN_FORMAT
-
-
-print(generate_diff(FIRST_FLAT_YAML, SECOND_FLAT_JSON))
